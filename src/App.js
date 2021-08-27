@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-
+import Statistics from "./Statistics/Statistics";
+import FeedbackOption from "./FeedbackOptions/FeedbackOptions";
+import Section from "./Section/Section";
 class App extends Component {
   state = {
     good: 0,
@@ -7,50 +9,41 @@ class App extends Component {
     bad: 0,
   };
 
-  handleFeedbackGood = () => {
-    this.setState((prevState) => ({ good: prevState.good + 1 }));
-  };
-  handleFeedbackBad = () => {
-    this.setState((prevState) => ({ bad: prevState.bad + 1 }));
-  };
-  handleFeedbackNeutral = () => {
-    this.setState((prevState) => ({ neutral: prevState.neutral + 1 }));
+  handleFeedback = (e) => {
+    const btnName = e.currentTarget.name;
+    this.setState((prevState) => ({ [btnName]: prevState[btnName] + 1 }));
   };
 
+  countTotalFeedback = () => {
+    const { good, bad, neutral } = this.state;
+    return good + bad + neutral;
+  };
+
+  positivePercentage = () => {
+    return Math.round((this.state.good * 100) / this.countTotalFeedback());
+  };
   render() {
+    const { good, bad, neutral } = this.state;
+    const options = Object.keys(this.state);
+    const total = this.countTotalFeedback();
+    const positivePercentage = this.positivePercentage();
     return (
       <div>
-        <h2>Please leave feedback</h2>
-        <button type="button" onClick={this.handleFeedbackGood}>
-          Good
-        </button>
-        <button type="button" onClick={this.handleFeedbackBad}>
-          Bad
-        </button>
-        <button type="button" onClick={this.handleFeedbackNeutral}>
-          Neutral
-        </button>
-        <h3>Statistics</h3>
-        {this.state.good || this.state.bad || this.state.neutral ? (
-          <ul>
-            <li>good {this.state.good}</li>
-            <li>bad {this.state.bad}</li>
-            <li>neutral {this.state.neutral}</li>
-            <li>
-              total {this.state.good + this.state.bad + this.state.neutral}
-            </li>
-            <li>
-              positive feedback
-              {this.state.good
-                ? (this.state.good * 100) /
-                  (this.state.good + this.state.bad + this.state.neutral)
-                : 0}
-              %
-            </li>
-          </ul>
-        ) : (
-          <h3>No feedback given</h3>
-        )}
+        <Section title="Please leave feedback">
+          <FeedbackOption
+            options={options}
+            handleFeedback={this.handleFeedback}
+          />
+        </Section>
+        <Section title="Statistics">
+          <Statistics
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            total={total}
+            positivePercentage={positivePercentage}
+          />
+        </Section>
       </div>
     );
   }
