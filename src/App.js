@@ -9,9 +9,8 @@ class App extends Component {
     bad: 0,
   };
 
-  handleFeedback = (e) => {
-    const btnName = e.currentTarget.name;
-    this.setState((prevState) => ({ [btnName]: prevState[btnName] + 1 }));
+  handleFeedback = (value) => {
+    this.setState((prevState) => ({ [value]: prevState[value] + 1 }));
   };
 
   countTotalFeedback = () => {

@@ -8,7 +8,7 @@ export default function FeedbackOption({ options, handleFeedback }) {
           type="button"
           key={index}
           name={option}
-          onClick={handleFeedback}
+          onClick={() => handleFeedback(option)}
         >
           {option}
         </button>
